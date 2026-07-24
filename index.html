@@ -32,17 +32,27 @@
     height:100%;
     position:relative;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;
     flex-direction:column;
     text-align:center;
     color:white;
     animation: fadeIn 1s ease;
     padding: 20px;
+    padding-top: 8vh;
+    padding-bottom: 70px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .page.active { display:flex; }
 
+  /* Halaman 1 tidak boleh discroll */
+  .page:first-of-type {
+    overflow:hidden;
+    justify-content:center;
+  }
+
   h1 { font-size: clamp(1.4em, 6vw, 2.3em); text-shadow: 2px 2px 8px rgba(0,0,0,0.4); margin-bottom:12px; z-index:2; padding:0 10px; }
-  p { font-size: clamp(0.95em, 4vw, 1.2em); text-shadow: 1px 1px 5px rgba(0,0,0,0.4); z-index:2; padding:0 15px; }
+  p { font-size: clamp(0.85em, 3.5vw, 1.1em); line-height:1.45; text-shadow: 1px 1px 5px rgba(0,0,0,0.4); z-index:2; padding:0 15px; }
   .emoji { font-size: clamp(2.5em, 10vw, 4em); margin-bottom:15px; animation: bounce 1.5s infinite; z-index:2; }
 
   .hint {
@@ -55,6 +65,7 @@
     color:white;
     z-index:5;
     padding: 0 10px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
   }
 
   @keyframes fadeIn {
@@ -153,8 +164,8 @@
     position:relative;
   }
 
-  /* ====== VIDEO HALAMAN 1 (rasio 4:3) ====== */
   /* ====== VIDEO HALAMAN 1 (rasio 16:9) ====== */
+/* ====== VIDEO HALAMAN 1 (rasio 16:9) ====== */
 #introVideoWrap {
   position: absolute;
   top: 30%;
@@ -193,8 +204,8 @@
   <p id="page1Hint">tekennnn</p>
   <button id="startBtn" class="btn" style="margin-top:20px; background:white; color:#333; padding:14px 30px; border:none; border-radius:40px; font-weight:bold; font-size:1.05em; cursor:pointer;">klikk klikkk klikkk</button>
 
-  <!-- Video landscape 4:3 yang muncul & diputar setelah tombol diklik.
-       Ganti "video1.mp4" dengan nama file videomu. -->
+  <!-- Video landscape 16:9 yang muncul & diputar setelah tombol diklik.
+       Ganti "selamathbd.mp4" dengan nama file videomu. -->
   <div id="introVideoWrap">
     <video id="introVideo" playsinline controls>
       <source src="selamathbd.mp4" type="video/mp4">
@@ -208,7 +219,7 @@
   <img id="media6" class="media" src="bbbd1.jpg" alt="foto kenangan 2">
   <div class="emoji"></div>
   <h1>HAPPY BIRTHDAYYY YAAAA</h1>
-  <p>in this level up day i hopee your dayy full of joyyy kalerfulllllllllll polllllll, ga cumaa hari ini tapi hari hari baik kedepannya harus full happyy goodmood teruss!!!<3</p>
+  <p>in this level up day i hopee your dayy full of joyyy kalerfulllllllllll polllllll, ga cumaa hari ini tapi hari hari baik kedepannya harus full happyy goodmood teruss!!!&lt;3</p>
 </div>
 
 <!-- ============ HALAMAN 3 ============ -->
@@ -217,7 +228,7 @@
   <img id="media7" class="media" src="sin4.jpg" alt="foto kenangan 3">
   <div class="emoji"></div>
   <h1>HEIIII LIHATTT FOTO INII</h1>
-  <p>KAMU UDAH NGELEWATIN BANYAK BANGETTT MOMEN MOMEN SELAMA 16 TAHUN INI,dari yang pose semut jutek😏😏 sampe ke PRETTIES GIRLL yang ada lesung pipi yang kiyuttttt ini, jangan lupa ucapin makasih buat orang orang deket kamu selama 16 tahun inii, sama orang tua kamu yang udah mengusahakan semuanya buat anak CANTKK INI, sama ade kamu yang udah jadi temen kamu dirumah, MEREKA BERUNTUNG BANGET BISA JADI MILIK KAMU<3</p>
+  <p>KAMU UDAH NGELEWATIN BANYAK BANGETTT MOMEN MOMEN SELAMA 16 TAHUN INI,dari yang pose semut jutek😏😏 sampe ke PRETTIES GIRLL yang ada lesung pipi yang kiyuttttt ini, jangan lupa ucapin makasih buat orang orang deket kamu selama 16 tahun inii, sama orang tua kamu yang udah mengusahakan semuanya buat anak CANTKK INI, sama ade kamu yang udah jadi temen kamu dirumah, MEREKA BERUNTUNG BANGET BISA JADI MILIK KAMU&lt;3</p>
 </div>
 
 <!-- ============ HALAMAN 4 ============ -->
@@ -226,10 +237,9 @@
   <img id="media8" class="media" src="sin8.jpg" alt="foto kenangan 4">
   <div class="emoji">🎈</div>
   <h1>HAIII AKU JUGA MAU NGUCAPIN MAKASIHH</h1>
-  <p>MAKASIHHH BANGETT KAMU UDAH MAU TEMENAN SAMA AKU, BAHKAN KITA BELOM PERNAH BERTEMU TAPI KENAPA KOK COMFY YH😏😏, makasihh udah jadi orang baik, aku tau kok kamu anak baik pinterr udah berjuang selama 16 tahun ini, long lifee yaaa, dunia masih butuh orang baik cantik bukan cuma paras tapi juga hati kaya kamu,SEHATTT TERUSS KURANGIN TUH COKLATT😏😏. mau cerita dikit ahh😏😏, kamu tau gakkk kamu tuh satu satunya orang yang pernah deket sama aku yang bisa dibilang sikap kamu tuh dewasaa dari sikap atau perbuatan kamu<3 very very lucky aku bisa ketemu sama kamu, dont be stranger yaaa,LOVEEE</p>
+  <p>MAKASIHHH BANGETT KAMU UDAH MAU TEMENAN SAMA AKU, BAHKAN KITA BELOM PERNAH BERTEMU TAPI KENAPA KOK COMFY YH😏😏, makasihh udah jadi orang baik, aku tau kok kamu anak baik pinterr udah berjuang selama 16 tahun ini, long lifee yaaa, dunia masih butuh orang baik cantik bukan cuma paras tapi juga hati kaya kamu,SEHATTT TERUSS KURANGIN TUH COKLATT😏😏. mau cerita dikit ahh😏😏, kamu tau gakkk kamu tuh satu satunya orang yang pernah deket sama aku yang bisa dibilang sikap kamu tuh dewasaa dari sikap atau perbuatan kamu&lt;3 very very lucky aku bisa ketemu sama kamu, dont be stranger yaaa,LOVEEE</p>
 </div>
 
-<!-- ============ HALAMAN FINAL: PILIHAN PACAR ============ -->
 <!-- ============ HALAMAN FINAL: PILIHAN PACAR ============ -->
 <div class="page" id="finalPage">
   <img id="finalPhoto" src="jdnk.jpg" alt="foto kenangan final">
@@ -240,7 +250,7 @@
   </div>
 </div>
 
-<div class="hint">buat lanjut diklikk yaa layarnyaa</div></div>
+<div class="hint">buat lanjut diklikk yaa layarnyaa</div>
 
 <!-- ====== TAG AUDIO ======
    Ganti nama file di array "songs" pada script di bawah sesuai lagu-lagumu.
@@ -369,7 +379,7 @@
     e.stopPropagation();
     musicStarted = true;
 
-    // sembunyikan tombol & teks, tampilkan video 4:3
+    // sembunyikan tombol & teks, tampilkan video 16:9
     startBtn.style.display = 'none';
     if (page1Title) page1Title.style.display = 'none';
     if (page1Hint) page1Hint.textContent = 'ketuk layar untuk lanjut setelah video selesai';
