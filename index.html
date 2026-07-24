@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Selamat Ulang Tahun 🎉</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; overscroll-behavior:none; }
+  body {
+    height:100vh;
+    height:100dvh; /* aman untuk browser mobile termasuk Chrome Android */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    overflow:hidden;
+    cursor:pointer;
+    position:relative;
+    -webkit-user-select:none;
+    user-select:none;
+    /* ====== SATU BACKGROUND UNTUK SEMUA HALAMAN ======
+       Ganti "bg.jpg" dengan nama file fotomu sendiri. */
+    background-image:url('bg.jpg');
+    background-size:cover;
+    background-position:center;
+  }
+
+  .page {
+    display:none;
+    width:100%;
+    height:100%;
+    position:relative;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    text-align:center;
+    color:white;
+    animation: fadeIn 1s ease;
+    padding: 20px;
+  }
+  .page.active { display:flex; }
+
+  h1 { font-size: clamp(1.4em, 6vw, 2.3em); text-shadow: 2px 2px 8px rgba(0,0,0,0.4); margin-bottom:12px; z-index:2; padding:0 10px; }
+  p { font-size: clamp(0.95em, 4vw, 1.2em); text-shadow: 1px 1px 5px rgba(0,0,0,0.4); z-index:2; padding:0 15px; }
+  .emoji { font-size: clamp(2.5em, 10vw, 4em); margin-bottom:15px; animation: bounce 1.5s infinite; z-index:2; }
+
+  .hint {
+    position:fixed;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width:100%;
+    text-align:center;
+    font-size:0.85em;
+    opacity:0.85;
+    color:white;
+    z-index:5;
+    padding: 0 10px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity:0; transform: translateY(20px) scale(0.9); }
+    to { opacity:1; transform: translateY(0) scale(1); }
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  /* ====== SLOT FOTO / VIDEO DI SETIAP HALAMAN ======
+     Ukuran otomatis menyesuaikan lebar layar HP (pakai vw), posisi tetap dalam %.
+     Atur top/left = posisi, rotate = kemiringan.
+  */
+  .media {
+    position:absolute;
+    z-index:1;
+    border-radius:14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    object-fit:cover;
+    border:4px solid rgba(255,255,255,0.6);
+    width: min(220px, 42vw);
+    height: min(220px, 34vh);
+  }
+  #finalPhoto {
+  width: min(200px, 45vw);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  border: 4px solid rgba(255,255,255,0.6);
+  margin-bottom: 15px;
+  z-index: 2;
+}
+
+  #media1 { top:0%; left:90%;  transform:rotate(-8deg); }
+  #media2 { top:20%; left:30%; transform:rotate(10deg); }
+  #media3 { top:0%; left:30%; transform:rotate(6deg); }
+  #media4 { top:30%; left:-30%;  transform:rotate(-6deg); }
+  #media5 { top:90%; left:6%;  transform:rotate(-6deg); }
+  #media6 { top:0%; left:-30%;  transform:rotate(-6deg); }
+  #media7 { top:-20%; left:-25%;  transform:rotate(-6deg); }
+  #media8 { top:0%; left:30%;  transform:rotate(6deg); }
+
+  /* Background diatur satu kali di body (lihat atas), semua halaman transparan
+     supaya foto yang sama terlihat konsisten di setiap halaman. */
+  .page::before {
+    content:"";
+    position:absolute; inset:0;
+    background: rgba(0,0,0,0.35);
+    z-index:0;
+  }
+  .page > * { position:relative; z-index:1; }
+
+  .balloon {
+    position:fixed; bottom:-100px; font-size: clamp(1.6em, 6vw, 2.5em);
+    animation: rise linear forwards; pointer-events:none; z-index:3;
+  }
+  @keyframes rise { to { transform: translateY(-110vh) rotate(20deg); opacity:0; } }
+
+  .confetti {
+    position:fixed; top:-20px; font-size: clamp(1em, 4vw, 1.5em);
+    animation: fall linear forwards; pointer-events:none; z-index:3;
+  }
+  @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity:0.3; } }
+
+  .btnWrap {
+    margin-top:25px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    justify-content:center;
+    position:relative;
+    max-width:90vw;
+  }
+  .btn {
+    padding: clamp(10px,3vw,14px) clamp(20px,6vw,30px);
+    font-size: clamp(0.95em, 4vw, 1.1em);
+    border:none;
+    border-radius:40px;
+    cursor:pointer;
+    font-weight:bold;
+    transition: all 0.25s ease;
+    touch-action: manipulation;
+  }
+  #yesBtn {
+    background:#0FFFFF;
+    color:white;
+    box-shadow:0 5px 15px rgba(255,77,109,0.5);
+    transition: transform 0.35s ease;
+  }
+  #noBtn {
+    background:white;
+    color:#333;
+    position:relative;
+  }
+
+  /* ====== VIDEO HALAMAN 1 (rasio 4:3) ====== */
+  /* ====== VIDEO HALAMAN 1 (rasio 16:9) ====== */
+#introVideoWrap {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  width: min(420px, 88vw);
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 4px solid rgba(255,255,255,0.6);
+  z-index: 2;
+}
+#introVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display:block;
+}
+
+  /* penyesuaian tambahan untuk layar sangat kecil */
+  @media (max-width: 360px) {
+    .media { width: min(160px, 40vw); height: min(200px, 28vh); }
+  }
+</style>
+</head>
+<body id="body">
+
+<!-- ============ HALAMAN 1 ============ -->
+<div class="page active">
+  <img id="media1" class="media" src="foto1.jpg" alt="foto kenangan 1">
+  <img id="media5" class="media" src="foto1.jpg" alt="foto kenangan 1">
+  <div class="emoji"></div>
+  <h1 id="page1Title">Haiiiii bulannnn i wannna say samtingggg seperti biasaaaa</h1>
+  <p id="page1Hint">tekennnn</p>
+  <button id="startBtn" class="btn" style="margin-top:20px; background:white; color:#333; padding:14px 30px; border:none; border-radius:40px; font-weight:bold; font-size:1.05em; cursor:pointer;">klikk klikkk klikkk</button>
+
+  <!-- Video landscape 4:3 yang muncul & diputar setelah tombol diklik.
+       Ganti "video1.mp4" dengan nama file videomu. -->
+  <div id="introVideoWrap">
+    <video id="introVideo" playsinline controls>
+      <source src="selamathbd.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<!-- ============ HALAMAN 2 ============ -->
+<div class="page">
+  <img id="media2" class="media" src="sin1.png" alt="foto kenangan 2">
+  <img id="media6" class="media" src="bbbd1.jpg" alt="foto kenangan 2">
+  <div class="emoji"></div>
+  <h1>HAPPY BIRTHDAYYY YAAAA</h1>
+  <p>in this level up day i hopee your dayy full of joyyy kalerfulllllllllll polllllll, ga cumaa hari ini tapi hari hari baik kedepannya harus full happyy goodmood teruss!!!<3</p>
+</div>
+
+<!-- ============ HALAMAN 3 ============ -->
+<div class="page">
+  <img id="media3" class="media" src="sinkcl.jpg" alt="foto kenangan 3">
+  <img id="media7" class="media" src="sin4.jpg" alt="foto kenangan 3">
+  <div class="emoji"></div>
+  <h1>HEIIII LIHATTT FOTO INII</h1>
+  <p>KAMU UDAH NGELEWATIN BANYAK BANGETTT MOMEN MOMEN SELAMA 16 TAHUN INI,dari yang pose semut jutek😏😏 sampe ke PRETTIES GIRLL yang ada lesung pipi yang kiyuttttt ini, jangan lupa ucapin makasih buat orang orang deket kamu selama 16 tahun inii, sama orang tua kamu yang udah mengusahakan semuanya buat anak CANTKK INI, sama ade kamu yang udah jadi temen kamu dirumah, MEREKA BERUNTUNG BANGET BISA JADI MILIK KAMU<3</p>
+</div>
+
+<!-- ============ HALAMAN 4 ============ -->
+<div class="page">
+  <img id="media4" class="media" src="sin7.jpg" alt="foto kenangan 4">
+  <img id="media8" class="media" src="sin8.jpg" alt="foto kenangan 4">
+  <div class="emoji">🎈</div>
+  <h1>HAIII AKU JUGA MAU NGUCAPIN MAKASIHH</h1>
+  <p>MAKASIHHH BANGETT KAMU UDAH MAU TEMENAN SAMA AKU, BAHKAN KITA BELOM PERNAH BERTEMU TAPI KENAPA KOK COMFY YH😏😏, makasihh udah jadi orang baik, aku tau kok kamu anak baik pinterr udah berjuang selama 16 tahun ini, long lifee yaaa, dunia masih butuh orang baik cantik bukan cuma paras tapi juga hati kaya kamu,SEHATTT TERUSS KURANGIN TUH COKLATT😏😏. mau cerita dikit ahh😏😏, kamu tau gakkk kamu tuh satu satunya orang yang pernah deket sama aku yang bisa dibilang sikap kamu tuh dewasaa dari sikap atau perbuatan kamu<3 very very lucky aku bisa ketemu sama kamu, dont be stranger yaaa,LOVEEE</p>
+</div>
+
+<!-- ============ HALAMAN FINAL: PILIHAN PACAR ============ -->
+<!-- ============ HALAMAN FINAL: PILIHAN PACAR ============ -->
+<div class="page" id="finalPage">
+  <img id="finalPhoto" src="jdnk.jpg" alt="foto kenangan final">
+  <h1>EHH BAIDEWAY ANIWAY BASWEYY EDAN😏😏CAN WE BE JUDY AND NICK?? LIKE BLUE AND PINK???</h1>
+  <div class="btnWrap">
+    <button class="btn" id="yesBtn">BOLEHHHHHH</button>
+    <button class="btn" id="noBtn">gbleh</button>
+  </div>
+</div>
+
+<div class="hint">buat lanjut diklikk yaa layarnyaa</div></div>
+
+<!-- ====== TAG AUDIO ======
+   Ganti nama file di array "songs" pada script di bawah sesuai lagu-lagumu.
+   lagu1.mp3 s/d lagu4.mp3 = lagu tiap halaman 1-4
+   lagu5.mp3 = lagu halaman final (sebelum diklik Iya)
+   lagu-yes.mp3 = lagu yang berubah saat tombol "Iya" diklik
+-->
+<audio id="bgMusic" loop></audio>
+
+<script>
+  const pages = document.querySelectorAll('.page');
+  const body = document.getElementById('body');
+  const bgMusic = document.getElementById('bgMusic');
+  let current = 0;
+  let onFinalPage = false;
+  let musicStarted = false;
+
+  // ====== DAFTAR LAGU: satu lagu per halaman ======
+  const songs = [
+    'jth.mp3', // halaman 1
+    'semua aku.mp3', // halaman 2
+    'semua aku.mp3', // halaman 3
+    'semua aku.mp3', // halaman 4
+    'niki.mp3'  // halaman final (sebelum klik Iya)
+  ];
+  const songAfterYes = 'lagu-yes.mp3'; // lagu setelah tombol Iya diklik
+
+  // ====== FUNGSI FADE VOLUME (dipakai oleh playSong) ======
+  let fadeInterval = null;
+
+  function fadeAudio(direction, duration, callback) {
+    clearInterval(fadeInterval);
+    const steps = 20;
+    const stepTime = duration / steps;
+    let count = 0;
+    fadeInterval = setInterval(() => {
+      count++;
+      if (direction === 'out') {
+        bgMusic.volume = Math.max(0, 1 - (count / steps));
+      } else {
+        bgMusic.volume = Math.min(1, count / steps);
+      }
+      if (count >= steps) {
+        clearInterval(fadeInterval);
+        if (callback) callback();
+      }
+    }, stepTime);
+  }
+
+  // ====== SATU-SATUNYA FUNGSI playSong (dengan fade in/out) ======
+  function playSong(src) {
+    if (bgMusic.getAttribute('src') === src) return;
+
+    const startNew = () => {
+      bgMusic.src = src;
+      bgMusic.currentTime = 0;
+      bgMusic.volume = 0;
+      bgMusic.play().catch(()=>{});
+      fadeAudio('in', 1000);   // durasi fade in (ms)
+    };
+
+    if (bgMusic.getAttribute('src')) {
+      fadeAudio('out', 800, startNew);   // durasi fade out (ms)
+    } else {
+      startNew();
+    }
+  }
+
+  function spawnDecor() {
+    const balloonEmojis = ['🎈','🎈','🎈'];
+    const confettiEmojis = ['✨','🎊','⭐','💛','💙'];
+
+    for (let i=0; i<5; i++) {
+      const b = document.createElement('div');
+      b.className = 'balloon';
+      b.textContent = balloonEmojis[Math.floor(Math.random()*balloonEmojis.length)];
+      b.style.left = Math.random()*100 + 'vw';
+      b.style.animationDuration = (4 + Math.random()*3) + 's';
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(), 7000);
+    }
+
+    for (let i=0; i<12; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.textContent = confettiEmojis[Math.floor(Math.random()*confettiEmojis.length)];
+      c.style.left = Math.random()*100 + 'vw';
+      c.style.animationDuration = (3 + Math.random()*2) + 's';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 5000);
+    }
+  }
+
+  spawnDecor();
+
+  function goNext() {
+    if (onFinalPage) return;
+
+    pages[current].classList.remove('active');
+    current = (current + 1) % pages.length;
+    pages[current].classList.add('active');
+
+    playSong(songs[current]); // ganti lagu tiap pindah halaman (fade otomatis)
+
+    if (pages[current].id === 'finalPage') {
+      onFinalPage = true;
+    } else {
+      spawnDecor();
+    }
+  }
+
+  document.body.addEventListener('click', (e) => {
+    if (e.target.id === 'yesBtn' || e.target.id === 'noBtn' || e.target.id === 'startBtn') return;
+    if (e.target.closest('#introVideoWrap')) return; // jangan pindah halaman saat menyentuh video
+    if (current === 0 && !musicStarted) return; // di halaman 1, harus tekan tombol Mulai dulu
+    goNext();
+  });
+
+  const startBtn = document.getElementById('startBtn');
+  const introVideoWrap = document.getElementById('introVideoWrap');
+  const introVideo = document.getElementById('introVideo');
+  const page1Title = document.getElementById('page1Title');
+  const page1Hint = document.getElementById('page1Hint');
+
+  startBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    musicStarted = true;
+
+    // sembunyikan tombol & teks, tampilkan video 4:3
+    startBtn.style.display = 'none';
+    if (page1Title) page1Title.style.display = 'none';
+    if (page1Hint) page1Hint.textContent = 'ketuk layar untuk lanjut setelah video selesai';
+
+    introVideoWrap.style.display = 'block';
+    introVideo.play().catch(()=>{});
+
+    // musik latar tetap mulai bareng halaman 1
+    playSong(songs[0]);
+  });
+
+  // ====== LOGIKA TOMBOL IYA / TIDAK ======
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  let yesScale = 1;
+  let yesClicked = false;
+
+  yesBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    if (!yesClicked) {
+      yesClicked = true;
+      playSong(songAfterYes); // ganti lagu saat pertama kali Iya diklik (fade otomatis)
+    }
+
+    yesScale += 1;
+    yesBtn.style.transform = `scale(${yesScale})`;
+    if (yesScale > 1) yesBtn.textContent = 'EHHH';
+    if (yesScale > 2) yesBtn.textContent = 'STOPP BOTT😏😏';
+    if (yesScale > 3) {
+      yesBtn.textContent = 'EHHH SERIUSS??';
+      yesBtn.style.animation = 'bounce  infinite';
+    }
+  });
+
+  noBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const btnW = noBtn.offsetWidth;
+    const btnH = noBtn.offsetHeight;
+    const maxX = window.innerWidth - btnW - 10;
+    const maxY = window.innerHeight - btnH - 10;
+    const randX = Math.random() * maxX;
+    const randY = Math.random() * maxY;
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = randX + 'px';
+    noBtn.style.top = randY + 'px';
+  });
+</script>
+
+</body>
+</html>
